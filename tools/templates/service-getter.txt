@@ -1,0 +1,30 @@
+private static class $__Holder {
+    @SuppressWarnings("auxiliaryclass")
+    private static final FallbackSupplier<$> FALLBACK = <FALLBACK>;<DEPRECATED>
+    private static final $ INSTANCE = getServiceWithFallback($.class, FALLBACK);
+}
+
+/**
+ * Checks whether {@link $} service is supported by the runtime.
+ * @return true if current runtime has implementation for all methods in {@link $}
+ * and its dependencies (can fully implement given service).
+ * @see #get$()
+ */<DEPRECATED>
+public static boolean is$Supported() {
+    return $__Holder.INSTANCE != null;
+}
+
+/**<JAVADOC>
+ * @return full implementation of {@link $} service if any, or {@code null} otherwise
+ */<DEPRECATED>
+public static $ get$() {
+    return $__Holder.INSTANCE;
+}
+
+/**<JAVADOC>
+ * @param extensions required extensions to enable
+ * @return full implementation of {@link $} service if any, or {@code null} otherwise
+ */<DEPRECATED>
+public static $ get$(Extensions... extensions) {
+    return getServiceWithFallback($.class, $__Holder.FALLBACK, extensions);
+}

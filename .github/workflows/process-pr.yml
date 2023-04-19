@@ -1,0 +1,36 @@
+name: Pull Request
+on:
+  pull_request:
+    branches: [main]
+concurrency:
+  group: process-pr-${{github.event.number}}
+  cancel-in-progress: true
+jobs:
+  process-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.1.1
+      - name: Setup Java JDK
+        uses: actions/setup-java@v4.1.0
+        with:
+          distribution: temurin
+          java-version: 21
+      - name: Process
+        run: |
+          mkdir -p artifact
+          echo ${{github.event.number}} > artifact/pr.txt
+          set +e
+          bash tools/build.sh process
+          EXIT_CODE=$?
+          cat "out/message.txt" 1> artifact/message.txt
+          [ -s artifact/message.txt ] || {
+            echo -e "Seems like there are no changes in jetbrains.runtime.api." > artifact/message.txt
+          }
+          exit $EXIT_CODE
+      - name: Upload artifact
+        if: always()
+        uses: actions/upload-artifact@v4.3.1
+        with:
+          name: process
+          path: artifact/

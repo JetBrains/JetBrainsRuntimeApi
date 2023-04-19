@@ -1,0 +1,182 @@
+name: Update API
+on:
+  push:
+    branches: [main]
+    paths-ignore: [api-blob]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Override API version'
+        default: ''
+        required: false
+        type: string
+      push:
+        description: 'Push new version and tag'
+        default: true
+        required: true
+        type: boolean
+      release:
+        description: 'Make release'
+        default: true
+        required: true
+        type: boolean
+      javadoc:
+        description: 'Update Javadoc'
+        default: true
+        required: true
+        type: boolean
+concurrency:
+  group: update-api
+  cancel-in-progress: false
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      RELEASE: ${{steps.build.outputs.RELEASE}}
+      JAVADOC: ${{steps.build.outputs.JAVADOC}}
+      API_VERSION: ${{steps.build.outputs.API_VERSION}}
+      API_DIFF: ${{steps.build.outputs.API_DIFF}}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.1.1
+        with:
+          ssh-key: ${{secrets.PUSH_KEY}}
+      - name: Setup Java JDK
+        uses: actions/setup-java@v4.1.0
+        with:
+          distribution: temurin
+          java-version: 21
+      - name: Build
+        id: build
+        run: |
+          bash tools/build.sh ${{ inputs.version != '' && inputs.version || 'full' }}
+          MESSAGE="`cat out/message.txt`"
+          if [ "x$MESSAGE" = "x" ] ; then
+            echo "Seems like there are no changes in jetbrains.runtime.api."
+            exit 0
+          fi
+          API_VERSION="`cat out/version.txt`"
+          echo "API version: $API_VERSION"
+          [[ "$API_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || {
+            echo "API version looks incorrect."
+            exit 1
+          }
+          API_DIFF=${MESSAGE#*\`\`\`}
+          API_DIFF=${API_DIFF%\`\`\`*}
+          [[ "$MESSAGE" = "$API_DIFF" ]] && API_DIFF=""
+          \cp out/api-blob .
+          echo "API_DIFF<<API_DIFF_EOF" >> $GITHUB_OUTPUT
+          echo "${API_DIFF}API_DIFF_EOF" >> $GITHUB_OUTPUT
+          echo "API_VERSION=$API_VERSION" >> "$GITHUB_OUTPUT"
+          INPUT_PUSH=${{inputs.push}}
+          INPUT_RELEASE=${{inputs.release}}
+          INPUT_JAVADOC=${{inputs.javadoc}}
+          echo "ARTIFACTS=true" >> "$GITHUB_OUTPUT"
+          echo "PUSH=${INPUT_PUSH:-"true"}" >> "$GITHUB_OUTPUT"
+          echo "RELEASE=${INPUT_RELEASE:-"true"}" >> "$GITHUB_OUTPUT"
+          echo "JAVADOC=${INPUT_JAVADOC:-"true"}" >> "$GITHUB_OUTPUT"
+      - name: Upload artifact jars
+        if: ${{steps.build.outputs.ARTIFACTS}}
+        uses: actions/upload-artifact@v4.3.1
+        with:
+          name: jars
+          path: |
+            out/jbr-api-${{steps.build.outputs.API_VERSION}}.jar
+            out/jbr-api-${{steps.build.outputs.API_VERSION}}-sources.jar
+            out/jbr-api-${{steps.build.outputs.API_VERSION}}-javadoc.jar
+      - name: Push update
+        if: ${{steps.build.outputs.PUSH}}
+        env:
+          API_VERSION: ${{steps.build.outputs.API_VERSION}}
+          API_DIFF: ${{steps.build.outputs.API_DIFF}}
+        run: |
+          git add api-blob
+          git config --global user.name 'JBR API'
+          git config --global user.email '${{vars.PUSH_EMAIL}}'
+          git commit -m "v$API_VERSION" -m "$API_DIFF"
+          git tag -a "v$API_VERSION" -m "v$API_VERSION" -m "$API_DIFF"
+          git push --all
+  create-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    needs: build
+    if: ${{needs.build.outputs.RELEASE}}
+    steps:
+      - name: Download artifact jars
+        uses: actions/download-artifact@v4.1.4
+        with:
+          name: jars
+      - name: Create release
+        uses: actions/github-script@v7.0.1
+        env:
+          API_VERSION: ${{needs.build.outputs.API_VERSION}}
+          API_DIFF: ${{needs.build.outputs.API_DIFF}}
+        with:
+          script: |
+            const versionName = 'jbr-api-' + process.env.API_VERSION;
+            const jarName     = versionName + '.jar';
+            const sourcesName = versionName + '-sources.jar';
+            const javadocName = versionName + '-javadoc.jar';
+            var fs = require('fs');
+            var jar     = fs.readFileSync(jarName);
+            var sources = fs.readFileSync(sourcesName);
+            var javadoc = fs.readFileSync(javadocName);
+            const response = await github.rest.repos.createRelease({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              name: 'v' + process.env.API_VERSION,
+              tag_name: 'v' + process.env.API_VERSION,
+              body: '```' + process.env.API_DIFF + '\n```',
+              draft: false,
+              prerelease: false,
+              generate_release_notes: true,
+            });
+            await github.rest.repos.uploadReleaseAsset({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              url: response.data.upload_url,
+              headers: { "content-type": "application/java-archive" },
+              name: jarName,
+              data: jar,
+            });
+            await github.rest.repos.uploadReleaseAsset({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              url: response.data.upload_url,
+              headers: { "content-type": "application/java-archive" },
+              name: sourcesName,
+              data: sources,
+            });
+            await github.rest.repos.uploadReleaseAsset({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              url: response.data.upload_url,
+              headers: { "content-type": "application/java-archive" },
+              name: javadocName,
+              data: javadoc,
+            });
+  deploy-pages:
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    needs: build
+    if: ${{needs.build.outputs.JAVADOC}}
+    steps:
+      - name: Download artifact jars
+        uses: actions/download-artifact@v4.1.4
+        with:
+          name: jars
+      - name: Unzip Javadoc jar
+        env:
+          API_VERSION: ${{needs.build.outputs.API_VERSION}}
+        run: unzip jbr-api-${API_VERSION}-javadoc.jar -d javadoc
+      - name: Configure Pages
+        uses: actions/configure-pages@v4.0.0
+      - name: Upload Javadoc Pages artifact
+        uses: actions/upload-pages-artifact@v3.0.1
+        with:
+          path: 'javadoc'
+      - name: Deploy Javadoc to Pages
+        uses: actions/deploy-pages@v4.0.4
