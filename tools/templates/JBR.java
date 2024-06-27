@@ -133,7 +133,7 @@ public final class JBR {
     /**
      * Checks whether given {@linkplain com.jetbrains.Extensions extension} is supported.
      * @param extension extension to check
-     * @return true is extension is supported
+     * @return true if extension is supported
      */
     public static boolean isExtensionSupported(Extensions extension) {
         return api != null && api.isExtensionSupported(extension);
