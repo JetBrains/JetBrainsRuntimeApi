@@ -25,10 +25,6 @@
 
 package com.jetbrains;
 
-import java.awt.AWTKeyStroke;
-import java.util.List;
-import java.util.function.Consumer;
-
 /**
  * Querying system shortcuts
  */
@@ -41,14 +37,34 @@ public interface SystemShortcuts {
     @Provided
     interface Shortcut {
         /**
-         * Returns the keystroke for this shortcut
+         * Returns the key code for this shortcut.
+         * See {@link java.awt.event.KeyEvent} for the list of key codes.
+         * If this shortcut doesn't have an associated key code,
+         * this method returns {@link java.awt.event.KeyEvent#VK_UNDEFINED}.
          *
-         * @return Keystroke to activate this shortcut
+         * @return The shortcut's key code
          */
-        AWTKeyStroke getKeyStroke();
+        int getKeyCode();
 
         /**
-         * Returns the unique identifier for this shortcut.
+         * Returns the key character for this shortcut.
+         * If this shortcut doesn't have an associated key character,
+         * this method returns {@link java.awt.event.KeyEvent#CHAR_UNDEFINED}.
+         *
+         * @return The shortcut's key character
+         */
+        char getKeyChar();
+
+        /**
+         * Returns the modifier mask for this shortcut.
+         * See {@link java.awt.event.InputEvent} for the list of modifiers.
+         *
+         * @return The shortcut's modifiers mask
+         */
+        int getModifiers();
+
+        /**
+         * Returns unique identifier for this shortcut.
          *
          * @return Unique identifier for the shortcut action
          */
@@ -60,13 +76,6 @@ public interface SystemShortcuts {
          * @return Human-readable description of the shortcut action
          */
         String getDescription();
-
-        /**
-         * Returns the platform-dependent key code of the shortcut key without modifiers
-         *
-         * @return Platform-dependent key code of the shortcut key without modifiers
-         */
-        int getNativeKeyCode();
     }
 
     /**
@@ -86,7 +95,7 @@ public interface SystemShortcuts {
      * @return The list of enabled system shortcuts, or {@code null} if the current toolkit does not support
      * querying the state of system shortcuts.
      */
-    List<Shortcut> querySystemShortcuts();
+    Shortcut[] querySystemShortcuts();
 
     /**
      * Set an event listener which is called whenever the user changes a system shortcut.
