@@ -196,3 +196,12 @@ $JAR --create --file="$JAVADOC_OUT" -C "$OUT/javadoc" . || {
 
 # When reading message.txt, redirect stderr to /dev/null just in case file doesn't exist.
 #echo "`cat "$OUT/message.txt" 2> /dev/null`"
+
+echo "Calculating checksums"
+# The output is a line with checksum,
+# a character indicating type ('*' for --binary, ' ' for --text),
+# and the supplied file argument (hence dropping the "$OUT/" prefix)
+cd "$OUT"
+sha256sum --binary "${JAR_OUT#"$OUT/"}" > "${JAR_OUT#"$OUT/"}.sha256"
+sha256sum --binary "${SOURCES_OUT#"$OUT/"}" > "${SOURCES_OUT#"$OUT/"}.sha256"
+sha256sum --binary "${JAVADOC_OUT#"$OUT/"}" > "${JAVADOC_OUT#"$OUT/"}.sha256"
