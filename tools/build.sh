@@ -8,7 +8,7 @@
 # Modes explained:
 #   process   - run annotation processor, check for errors, output messages & API diff.
 #   dev       - build jbr-api-SNAPSHOT.jar.
-#   full      - build jbr-api-<version>.jar, jbr-api-<version>-sources.jar, jbr-api-<version>-javadoc.jar.
+#   full      - build jbr-api-<version>.jar, jbr-api-<version>-sources.jar, jbr-api-<version>-javadoc.jar and jbr-api-<version>.pom.
 #   <version> - full build with manually overridden version.
 
 # Init variables.
@@ -114,6 +114,7 @@ API_VERSION="`cat $OUT/version.txt`"
 JAR_OUT="$OUT/jbr-api-$API_VERSION.jar"
 SOURCES_OUT="$OUT/jbr-api-$API_VERSION-sources.jar"
 JAVADOC_OUT="$OUT/jbr-api-$API_VERSION-javadoc.jar"
+POM_OUT="$OUT/jbr-api-$API_VERSION.pom"
 
 # Check jar.
 $JAR --help &> /dev/null || JAR="${JAR}.exe"
@@ -194,6 +195,10 @@ $JAR --create --file="$JAVADOC_OUT" -C "$OUT/javadoc" . || {
   exit 1
 }
 
+# Create pom.
+cp "tools/templates/pom.xml" "$POM_OUT"
+sed -i -e "s/{{version}}/$API_VERSION/g" "$POM_OUT"
+
 # When reading message.txt, redirect stderr to /dev/null just in case file doesn't exist.
 #echo "`cat "$OUT/message.txt" 2> /dev/null`"
 
@@ -205,3 +210,4 @@ cd "$OUT"
 sha256sum --binary "${JAR_OUT#"$OUT/"}" > "${JAR_OUT#"$OUT/"}.sha256"
 sha256sum --binary "${SOURCES_OUT#"$OUT/"}" > "${SOURCES_OUT#"$OUT/"}.sha256"
 sha256sum --binary "${JAVADOC_OUT#"$OUT/"}" > "${JAVADOC_OUT#"$OUT/"}.sha256"
+sha256sum --binary "${POM_OUT#"$OUT/"}" > "${POM_OUT#"$OUT/"}.sha256"

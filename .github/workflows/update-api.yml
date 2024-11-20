@@ -87,6 +87,8 @@ jobs:
             out/jbr-api-${{steps.build.outputs.API_VERSION}}.jar.sha256
             out/jbr-api-${{steps.build.outputs.API_VERSION}}-sources.jar.sha256
             out/jbr-api-${{steps.build.outputs.API_VERSION}}-javadoc.jar.sha256
+            out/jbr-api-${{steps.build.outputs.API_VERSION}}.pom
+            out/jbr-api-${{steps.build.outputs.API_VERSION}}.pom.sha256
       - name: Push update
         if: ${{steps.build.outputs.PUSH}}
         env:
@@ -124,6 +126,8 @@ jobs:
             const jarNameSha256     = jarName + '.sha256';
             const sourcesNameSha256 = sourcesName + '.sha256';
             const javadocNameSha256 = javadocName + '.sha256';
+            const pomName        = versionName + '.pom';
+            const pomNameSha256  = pomName + '.sha256';
             const response = await github.rest.repos.createRelease({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
@@ -153,6 +157,8 @@ jobs:
                 jarNameSha256,
                 sourcesNameSha256,
                 javadocNameSha256,
+                pomName,
+                pomNameSha256,
             ]) {
                 await github.rest.repos.uploadReleaseAsset({
                     owner: context.repo.owner,
