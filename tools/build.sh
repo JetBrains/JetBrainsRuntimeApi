@@ -116,6 +116,35 @@ SOURCES_OUT="$OUT/jbr-api-$API_VERSION-sources.jar"
 JAVADOC_OUT="$OUT/jbr-api-$API_VERSION-javadoc.jar"
 POM_OUT="$OUT/jbr-api-$API_VERSION.pom"
 
+# Check licences.
+LICENCE_PATTERN=`cat <<-END
+/\*
+ \* Copyright ?(2000-)20[0-9][0-9] JetBrains s.r.o.
+ \*
+ \* Licensed under the Apache License, Version 2.0 (the "License");
+ \* you may not use this file except in compliance with the License.
+ \* You may obtain a copy of the License at
+ \*
+ \* http://www.apache.org/licenses/LICENSE-2.0
+ \*
+ \* Unless required by applicable law or agreed to in writing, software
+ \* distributed under the License is distributed on an "AS IS" BASIS,
+ \* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ \* See the License for the specific language governing permissions and
+ \* limitations under the License.
+ \*/
+*
+END
+`
+for i in `find . -name "*.java" -type f`; do
+    if [[ `cat $i` != $LICENCE_PATTERN ]] ; then
+      echo -e "\u2757 Unexpected licence header in ${i:2}, please use Apache 2.0." >> "$OUT/message.txt"
+      echo -e "Error: Unexpected licence header in ${i:2}, please use Apache 2.0."
+      LICENCE_CHECK_FAILED=true
+    fi
+done
+if [ "$LICENCE_CHECK_FAILED" = true ] ; then exit 1; fi
+
 # Check jar.
 $JAR --help &> /dev/null || JAR="${JAR}.exe"
 $JAR --help &> /dev/null || {
