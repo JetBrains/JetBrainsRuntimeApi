@@ -46,6 +46,14 @@ public interface RoundedCornersManager {
      *   <li>"small" - round the corners if appropriate, with a small radius</li>
      * </ul>
      *
+     * Possible values for WLToolkit on Linux ({@link java.lang.String}):
+     * <ul>
+     *   <li>"default" - let the system decide whether or not to round window corners</li>
+     *   <li>"none" - never round window corners</li>
+     *   <li>"full" - round the corners if appropriate</li>
+     *   <li>"small" - round the corners if appropriate, with a small radius</li>
+     * </ul>
+     *
      * @param window window to setup rounded corners on
      * @param params rounded corners hint
      */
