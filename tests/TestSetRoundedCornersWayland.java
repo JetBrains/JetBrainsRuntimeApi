@@ -39,7 +39,6 @@ public class TestSetRoundedCornersWayland {
 
     private final Robot robot;
     private JFrame frame;
-    private JFrame testFrame;
 
     public TestSetRoundedCornersWayland() {
         try {
@@ -55,14 +54,14 @@ public class TestSetRoundedCornersWayland {
         }
 
         runSwing(() -> {
-            testFrame = new JFrame("Rounded Corners Test");
-            testFrame.setUndecorated(true);
+            frame = new JFrame("Rounded Corners Test");
+            frame.setUndecorated(true);
             JPanel testPanel = new JPanel();
             testPanel.setOpaque(true);
             testPanel.setBackground(Color.GREEN);
-            testFrame.setContentPane(testPanel);
-            testFrame.setBounds(0, 0, 100, 100);
-            testFrame.setVisible(true);
+            frame.setContentPane(testPanel);
+            frame.setBounds(0, 0, 100, 100);
+            frame.setVisible(true);
         });
 
         robot.delay(DELAY);
@@ -74,12 +73,12 @@ public class TestSetRoundedCornersWayland {
         validatePixelColor(0, 99, Color.GREEN);
         validatePixelColor(99, 99, Color.GREEN);
         System.out.println("...done");
-        runSwing(() -> testFrame.setVisible(false));
+        runSwing(() -> frame.setVisible(false));
         robot.delay(DELAY);
 
         runSwing(() -> {
-            JBR.getRoundedCornersManager().setRoundedCorners(testFrame, roundParams);
-            testFrame.setVisible(true);
+            JBR.getRoundedCornersManager().setRoundedCorners(frame, roundParams);
+            frame.setVisible(true);
         });
         robot.delay(DELAY);
 
@@ -97,7 +96,8 @@ public class TestSetRoundedCornersWayland {
     }
 
     private void validatePixelColor(int x, int y, Color expected) {
-        var actual = robot.getPixelColor(x, y);
+        var loc = frame.getLocationOnScreen();
+        var actual = robot.getPixelColor(loc.x + x, loc.y + y);
         if (!actual.equals(expected)) {
             throw new RuntimeException(String.format("The color at (%d, %d) is incorrect. Expected %s, but got %s", x, y, expected, actual));
         }
@@ -116,10 +116,6 @@ public class TestSetRoundedCornersWayland {
         if (frame != null) {
             frame.dispose();
             frame = null;
-        }
-        if (testFrame != null) {
-            testFrame.dispose();
-            testFrame = null;
         }
     }
 
