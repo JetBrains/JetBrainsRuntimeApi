@@ -28,6 +28,8 @@ public interface SharedTextures {
     public final int NotSupported = 0;
     /** Metal textures are supported */
     public final int MetalTextureType = 1;
+    /** OpenGL textures */
+    public final int OpenGLTextureType = 2;
 
     /**
      * Check what type of the texture is supported
@@ -55,4 +57,18 @@ public interface SharedTextures {
      * @throws IllegalArgumentException if the texture in a wrong format
      */
     Image wrapTexture(GraphicsConfiguration gc, long texture);
+
+    /**
+     * return something
+     * @param gc fcxz
+     * @return asdfasf
+     */
+    long getSharedOpenGLContext(GraphicsConfiguration gc);
+
+    /**
+     * return something
+     * @param gc fcxz
+     * @return asdfasf
+     */
+    long getSharedOpenGLContextPixelFormat(GraphicsConfiguration gc);
 }
