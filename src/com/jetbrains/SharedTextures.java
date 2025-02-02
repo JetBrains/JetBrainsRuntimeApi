@@ -33,10 +33,9 @@ public interface SharedTextures {
 
     /**
      * Check what type of the texture is supported
-     * @param gc graphics configuration
      * @return the texture type or {@link SharedTextures#NotSupported} if shared textures are not supported
      */
-    int getTextureType(GraphicsConfiguration gc);
+    int getTextureType();
 
     /**
      * Creates an image with the specified graphics configuration and texture.
@@ -60,15 +59,13 @@ public interface SharedTextures {
 
     /**
      * return something
-     * @param gc fcxz
      * @return asdfasf
      */
-    long getSharedOpenGLContext(GraphicsConfiguration gc);
+    long getSharedOpenGLContext();
 
     /**
      * return something
-     * @param gc fcxz
      * @return asdfasf
      */
-    long getSharedOpenGLContextPixelFormat(GraphicsConfiguration gc);
+    long getSharedOpenGLContextPixelFormat();
 }
