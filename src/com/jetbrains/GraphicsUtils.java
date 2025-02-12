@@ -74,7 +74,8 @@ public interface GraphicsUtils {
     }
 
     /**
-     * Checks whether display is built-in.
+     * Checks whether the display is built-in.
+     * Supported only on macOS (can be implemented in other OS if necessary).
      * @param display display to check
      * @return true when display is built-in.
      */
