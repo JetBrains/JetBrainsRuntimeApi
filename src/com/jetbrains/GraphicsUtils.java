@@ -72,4 +72,11 @@ public interface GraphicsUtils {
          */
         void constrain(int x, int y, int w, int h);
     }
+
+    /**
+     * Checks whether display is built-in.
+     * @param display display to check
+     * @return true when display is built-in.
+     */
+    boolean isBuiltinDisplay(GraphicsDevice display);
 }
