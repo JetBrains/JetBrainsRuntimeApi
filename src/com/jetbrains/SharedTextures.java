@@ -43,13 +43,19 @@ public interface SharedTextures {
      * <ul>
      *     <li>The resulting image cannot be used as a drawing destination.</li>
      *     <li>The resulting image is compatible with the provided {@link GraphicsConfiguration}.
-     *         It is the responsibility of client code to track graphics configuration changes and recreate the wrapping image.</li>
+     *         It is the responsibility of client code to track graphics configuration changes and recreate the wrapping
+     *         image.</li>
      *     <li>Wrapping a texture has some overhead (allocating stencil data on Metal). It is advisable to reuse the
      *         image during the texture's lifetime unless the {@link GraphicsConfiguration} changes.</li>
      *     <li>Client code is responsible for ensuring proper synchronization. All operations involving
-     *         the texture must be completed before the texture is used within the JBR rendering pipeline.</li>
-     *     <li>Wrapping the texture increments the texture reference counter, which is subsequently decremented
-     *         when the image is disposed.</li>
+     *         the texture must have been completed before the resulting image is used within the JBR rendering
+     *         pipeline.</li>
+     *     <li>Texture liftime:
+     *          <ul>
+     *              <li>Metal: This texture is retained for the wrapping image lifetime and will be released
+     *                  after the image has been disposed.</li>
+     *          </ul>
+     *     </li>
      * </ul>
      *
      * @param gc      the target {@link GraphicsConfiguration}.
