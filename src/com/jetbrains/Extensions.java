@@ -22,4 +22,8 @@ package com.jetbrains;
  * @see JBR#isExtensionSupported(Extensions)
  */
 public enum Extensions {
+    /**
+     * Checks if a display is builtin
+     */
+    BuiltinDisplayChecker
 }
