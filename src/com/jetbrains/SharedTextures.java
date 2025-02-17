@@ -25,19 +25,14 @@ import java.awt.*;
 @Provided
 public interface SharedTextures {
     /**
-     * Shared textures are not supported.
-     */
-    public final int NotSupported = 0;
-    /**
      * Metal textures are supported.
      */
-    public final int MetalTextureType = 1;
+    public final static int METAL_TEXTURE_TYPE = 1;
 
     /**
-     * Checks what type of texture is supported by the current rendering pipeline.
+     * Returns the texture type supported by the current rendering pipeling.
      *
-     * @return the type of shared texture supported, or {@link SharedTextures#NotSupported}
-     * if shared textures are not supported.
+     * @return the type of shared texture supported.
      */
     int getTextureType();
 
