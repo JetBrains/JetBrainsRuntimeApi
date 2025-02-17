@@ -79,6 +79,6 @@ public interface GraphicsUtils {
      * @param display display to check
      * @return true when display is built-in.
      */
-    @Extension(Extensions.BuiltinDisplayChecker)
+    @Extension(Extensions.BUILTIN_DISPLAY_CHECKER)
     boolean isBuiltinDisplay(GraphicsDevice display);
 }

@@ -25,5 +25,5 @@ public enum Extensions {
     /**
      * Checks if a display is builtin
      */
-    BuiltinDisplayChecker
+    BUILTIN_DISPLAY_CHECKER
 }
