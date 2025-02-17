@@ -72,4 +72,13 @@ public interface GraphicsUtils {
          */
         void constrain(int x, int y, int w, int h);
     }
+
+    /**
+     * Checks whether the display is built-in.
+     * Supported only on macOS.
+     * @param display display to check
+     * @return true when display is built-in.
+     */
+    @Extension(Extensions.BUILTIN_DISPLAY_CHECKER)
+    boolean isBuiltinDisplay(GraphicsDevice display);
 }
