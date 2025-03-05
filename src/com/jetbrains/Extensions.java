@@ -25,5 +25,10 @@ public enum Extensions {
     /**
      * Checks if a display is builtin
      */
-    BUILTIN_DISPLAY_CHECKER
+    BUILTIN_DISPLAY_CHECKER,
+
+    /**
+     * Opts-in {@link com.jetbrains.SystemUtils#shrinkingGC}
+     */
+    SHRINKING_GC
 }

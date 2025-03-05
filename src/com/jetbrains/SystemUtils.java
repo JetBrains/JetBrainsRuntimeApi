@@ -28,4 +28,14 @@ public interface SystemUtils {
      * Implemented for G1 only; equivalent to System.gc() for other garbage collectors.
      */
     void fullGC();
+
+    /**
+     * Performs garbage collection making an additional effort to shrink the heap in size.
+     * After GC the heap size is set proportional to heap used bytes using
+     * -XX:JbrShrinkingGcMaxHeapFreeRatio option.
+     * Implemented for G1 only; equivalent to System.gc() for other garbage collectors.
+     * Equivalent to System.gc() if -XX:JbrShrinkingGcMaxHeapFreeRatio option is not set.
+     */
+    @Extension(Extensions.SHRINKING_GC)
+    void shrinkingGC();
 }
