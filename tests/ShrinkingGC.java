@@ -51,6 +51,7 @@ public class ShrinkingGC {
 
             System.out.println("Heap size before GC: " + Runtime.getRuntime().totalMemory());
 
+            Thread.sleep(300);
             System.gc();
             long heapSizeAfterGc = Runtime.getRuntime().totalMemory();
 
