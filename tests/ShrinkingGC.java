@@ -19,18 +19,18 @@
  * @test
  * @summary Verifies that heap is shrunk in size
  *          by a special GC invocation through SystemUtils.shrinkingGC() API
- * @run main/othervm -XX:JbrShrinkingGcMaxHeapFreeRatio=50 -XX:+UseG1GC -Xmx2G pass
- * @run main/othervm -XX:JbrShrinkingGcMaxHeapFreeRatio=50 -XX:+UseZGC -Xmx2G
- * @run main/othervm -XX:JbrShrinkingGcMaxHeapFreeRatio=50 -XX:+UseShenandoahGC -Xmx2G
- * @run main/othervm -XX:JbrShrinkingGcMaxHeapFreeRatio=50 -XX:+UseParallelGC -Xmx2G
- * @run main/othervm -XX:JbrShrinkingGcMaxHeapFreeRatio=50 -XX:+UseSerialGC -Xmx2G
- * @run main/othervm -XX:JbrShrinkingGcMaxHeapFreeRatio=50 -XX:+UnlockExperimentalVMOptions -XX:+UseEpsilonGC -Xmx2G
- * @run main/othervm -XX:+UseG1GC -Xmx2G
- * @run main/othervm -XX:+UseZGC -Xmx2G
- * @run main/othervm -XX:+UseShenandoahGC -Xmx2G
- * @run main/othervm -XX:+UseParallelGC -Xmx2G
- * @run main/othervm -XX:+UseSerialGC -Xmx2G
- * @run main/othervm -XX:+UnlockExperimentalVMOptions -XX:+UseEpsilonGC -Xmx2G
+ * @run main/othervm -XX:JbrShrinkingGcMaxHeapFreeRatio=50 -XX:+UseG1GC -Xmx2G ShrinkingGC pass
+ * @run main/othervm -XX:JbrShrinkingGcMaxHeapFreeRatio=50 -XX:+UseZGC -Xmx2G ShrinkingGC
+ * @run main/othervm -XX:JbrShrinkingGcMaxHeapFreeRatio=50 -XX:+UseShenandoahGC -Xmx2G ShrinkingGC
+ * @run main/othervm -XX:JbrShrinkingGcMaxHeapFreeRatio=50 -XX:+UseParallelGC -Xmx2G ShrinkingGC
+ * @run main/othervm -XX:JbrShrinkingGcMaxHeapFreeRatio=50 -XX:+UseSerialGC -Xmx2G ShrinkingGC
+ * @run main/othervm -XX:JbrShrinkingGcMaxHeapFreeRatio=50 -XX:+UnlockExperimentalVMOptions -XX:+UseEpsilonGC -Xmx2G ShrinkingGC
+ * @run main/othervm -XX:+UseG1GC -Xmx2G ShrinkingGC
+ * @run main/othervm -XX:+UseZGC -Xmx2G ShrinkingGC
+ * @run main/othervm -XX:+UseShenandoahGC -Xmx2G ShrinkingGC
+ * @run main/othervm -XX:+UseParallelGC -Xmx2G ShrinkingGC
+ * @run main/othervm -XX:+UseSerialGC -Xmx2G ShrinkingGC
+ * @run main/othervm -XX:+UnlockExperimentalVMOptions -XX:+UseEpsilonGC -Xmx2G ShrinkingGC
  */
 
 import com.jetbrains.Extensions;
@@ -66,5 +66,7 @@ public class ShrinkingGC {
                 throw new RuntimeException("shrinkingGC() could not shrink more that gc() does");
             }
         }
+
+        System.out.println(retained500m);
     }
 }
