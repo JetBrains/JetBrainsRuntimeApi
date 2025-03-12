@@ -28,4 +28,18 @@ public interface SystemUtils {
      * Implemented for G1 only; equivalent to System.gc() for other garbage collectors.
      */
     void fullGC();
+
+    /**
+     * Performs garbage collection making an additional effort to reduce the heap's committed size.
+     * After GC, the JVM adjusts the committed heap size based on the amount of used memory,
+     * adhering to the -XX:JbrShrinkingGcMaxHeapFreeRatio option.
+     *
+     * Implemented for G1 only; equivalent to System.gc() for other garbage collectors.
+     *
+     * Equivalent to System.gc() if -XX:JbrShrinkingGcMaxHeapFreeRatio option is not set.
+     *
+     * Note: This does not change the minimum (-Xms) or maximum (-Xmx) heap size limits
+     */
+    @Extension(Extensions.SHRINKING_GC)
+    void shrinkingGC();
 }
