@@ -24,13 +24,13 @@
  * @run main/othervm -XX:JbrShrinkingGcMaxHeapFreeRatio=50 -XX:+UseShenandoahGC -Xmx2G ShrinkingGC
  * @run main/othervm -XX:JbrShrinkingGcMaxHeapFreeRatio=50 -XX:+UseParallelGC -Xmx2G ShrinkingGC
  * @run main/othervm -XX:JbrShrinkingGcMaxHeapFreeRatio=50 -XX:+UseSerialGC -Xmx2G ShrinkingGC
- * @run main/othervm -XX:JbrShrinkingGcMaxHeapFreeRatio=50 -XX:+UnlockExperimentalVMOptions -XX:+UseEpsilonGC -Xmx2G ShrinkingGC
+ * @run main/othervm -XX:JbrShrinkingGcMaxHeapFreeRatio=50 -XX:+UnlockExperimentalVMOptions -XX:+UseEpsilonGC -Xmx2G ShrinkingGC one_iter
  * @run main/othervm -XX:+UseG1GC -Xmx2G ShrinkingGC
  * @run main/othervm -XX:+UseZGC -Xmx2G ShrinkingGC
  * @run main/othervm -XX:+UseShenandoahGC -Xmx2G ShrinkingGC
  * @run main/othervm -XX:+UseParallelGC -Xmx2G ShrinkingGC
  * @run main/othervm -XX:+UseSerialGC -Xmx2G ShrinkingGC
- * @run main/othervm -XX:+UnlockExperimentalVMOptions -XX:+UseEpsilonGC -Xmx2G ShrinkingGC
+ * @run main/othervm -XX:+UnlockExperimentalVMOptions -XX:+UseEpsilonGC -Xmx2G ShrinkingGC one_iter
  */
 
 import com.jetbrains.Extensions;
@@ -43,10 +43,11 @@ public class ShrinkingGC {
 
     public static void main(String[] args) throws Exception {
         boolean expectTestToPass = args.length > 0 && "pass".equals(args[0]);
+        int iterations = args.length > 0 && "one_iter".equals(args[0]) ? 1 : ITERATIONS;
 
         ByteBuffer retained500m = ByteBuffer.allocate(512 * 1024 * 1024);
 
-        for (int i = 1; i < ITERATIONS; i++) {
+        for (int i = 0; i < iterations; i++) {
             ByteBuffer.allocate(512 * 1024 * 1024);
 
             System.out.println("Heap size before GC: " + Runtime.getRuntime().totalMemory());
