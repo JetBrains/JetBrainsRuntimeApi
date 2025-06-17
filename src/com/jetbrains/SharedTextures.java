@@ -17,6 +17,7 @@
 package com.jetbrains;
 
 import java.awt.*;
+import java.awt.image.VolatileImage;
 
 /**
  * The service provides functionality for working with shared textures in JetBrainsRuntime.
@@ -28,6 +29,11 @@ public interface SharedTextures {
      * Metal textures are supported.
      */
     public final static int METAL_TEXTURE_TYPE = 1;
+
+    /**
+     * Bla bla bla.
+     */
+    public final static int OPENGL_TEXTURE_TYPE = 2;
 
     /**
      * Returns the texture type supported by the current rendering pipeling.
@@ -69,4 +75,29 @@ public interface SharedTextures {
      * @throws IllegalArgumentException      if the texture cannot be wrapped. The details are logged in {@code J2D_TRACE_ERROR}.
      */
     Image wrapTexture(GraphicsConfiguration gc, long texture);
+
+    /**
+     * Blablabla
+     * @param gc Blablabla
+     * @return Blablabla
+     */
+    @Extension(Extensions.SHARED_TEXTURES_OPENGL)
+    long getSharedGLContext(GraphicsConfiguration gc);
+
+    /**
+     * Blablabla
+     * @param gc Blablabla
+     * @return Blablabla
+     */
+    @Extension(Extensions.SHARED_TEXTURES_OPENGL)
+    int getGLPixelFormat(GraphicsConfiguration gc);
+
+
+    /**
+     * Blablabla
+     * @param volatileImage Blablabla
+     * @return Blablabla
+     */
+    @Extension(Extensions.SHARED_TEXTURES_VOLATILE_IMAGE)
+    long getTexture(VolatileImage volatileImage);
 }

@@ -30,5 +30,14 @@ public enum Extensions {
     /**
      * Opts-in {@link com.jetbrains.SystemUtils#shrinkingGC}
      */
-    SHRINKING_GC
+    SHRINKING_GC,
+    /**
+     * asdasdf
+     */
+    SHARED_TEXTURES_OPENGL,
+
+    /**
+     * blablabla
+     */
+    SHARED_TEXTURES_VOLATILE_IMAGE
 }
