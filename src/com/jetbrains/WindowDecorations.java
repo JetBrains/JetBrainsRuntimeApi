@@ -108,6 +108,8 @@ public interface WindowDecorations {
          *         Note that dialogs have only one button, while frames usually have 3 of them.</li>
          *     <li>{@code controls.dark} : {@link Boolean} - whether to use dark or light color theme
          *         (light or dark icons respectively).</li>
+         *     <li>{@code controls.rtl} : {@link Boolean} - Override the title bar alignment to become RTL.
+         *         (LTR (Default) = Buttons on the right; RTL = Buttons on the left)</li>
          *     <li>{@code controls.<layer>.<state>} : {@link Color} - precise control over button colors,
          *         where {@code <layer>} is one of:
          *         <ul><li>{@code foreground}</li><li>{@code background}</li></ul>
