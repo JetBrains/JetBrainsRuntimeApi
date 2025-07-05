@@ -32,12 +32,7 @@ public enum Extensions {
      */
     SHRINKING_GC,
     /**
-     * asdasdf
+     * Extends SharedTextures service with OpenGL support
      */
     SHARED_TEXTURES_OPENGL,
-
-    /**
-     * blablabla
-     */
-    SHARED_TEXTURES_VOLATILE_IMAGE
 }

@@ -31,15 +31,27 @@ public interface SharedTextures {
     public final static int METAL_TEXTURE_TYPE = 1;
 
     /**
-     * Bla bla bla.
+     * OpenGL.
      */
     public final static int OPENGL_TEXTURE_TYPE = 2;
 
+
     /**
-     * Returns the texture type supported by the current rendering pipeling.
+     * Returns the texture type supported by the default graphics device.
+     * @param gc the target GraphicsConfiguration
+     * @return the type of shared texture supported.
+     */
+    @Extension(Extensions.SHARED_TEXTURES_OPENGL)
+    int getTextureType(GraphicsConfiguration gc);
+
+    /**
+     * Returns the texture type supported by the current graphics configuration.
+     * @deprecated This method returns the texture type for the default graphics device.
+     *             Use {@link #getTextureType(GraphicsConfiguration)} instead.
      *
      * @return the type of shared texture supported.
      */
+    @Deprecated
     int getTextureType();
 
     /**
@@ -91,13 +103,4 @@ public interface SharedTextures {
      */
     @Extension(Extensions.SHARED_TEXTURES_OPENGL)
     int getGLPixelFormat(GraphicsConfiguration gc);
-
-
-    /**
-     * Blablabla
-     * @param volatileImage Blablabla
-     * @return Blablabla
-     */
-    @Extension(Extensions.SHARED_TEXTURES_VOLATILE_IMAGE)
-    long getTexture(VolatileImage volatileImage);
 }
