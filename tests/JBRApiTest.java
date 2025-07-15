@@ -45,10 +45,12 @@ public class JBRApiTest {
             IGNORED_SERVICES.add("com.jetbrains.SystemShortcuts");
         } else if (os.contains("mac")) {
             IGNORED_SERVICES.add("com.jetbrains.WindowMove");
+            IGNORED_SERVICES.add("com.jetbrains.HiDPIInfo");
         } else {
             IGNORED_SERVICES.add("com.jetbrains.WindowMove");
             IGNORED_SERVICES.add("com.jetbrains.TextInput");
             IGNORED_SERVICES.add("com.jetbrains.SystemShortcuts");
+            IGNORED_SERVICES.add("com.jetbrains.HiDPIInfo");
         }
         if (!JBR.getApiVersion().equals("SNAPSHOT") &&
             !JBR.getApiVersion().matches("\\d+\\.\\d+\\.\\d+")) throw new Error("Invalid API version: " + JBR.getApiVersion());
