@@ -35,20 +35,24 @@ public class JBRApiTest {
 
     // These services may not always be supported and usually have their own dedicated tests.
     private static final Set<String> IGNORED_SERVICES = new HashSet<>();
+    private static final Set<String> IGNORED_EXTENSIONS = new HashSet<>();
 
     public static void main(String[] args) throws Exception {
         IGNORED_SERVICES.add("com.jetbrains.RoundedCornersManager");
+        IGNORED_SERVICES.add("com.jetbrains.SharedTextures"); // only supported for the Metal pipeline
         String os = System.getProperty("os.name").toLowerCase();
         if (os.contains("linux")) {
             IGNORED_SERVICES.add("com.jetbrains.WindowDecorations");
             IGNORED_SERVICES.add("com.jetbrains.TextInput");
             IGNORED_SERVICES.add("com.jetbrains.SystemShortcuts");
+            IGNORED_EXTENSIONS.add("BUILTIN_DISPLAY_CHECKER");
         } else if (os.contains("mac")) {
             IGNORED_SERVICES.add("com.jetbrains.WindowMove");
         } else {
             IGNORED_SERVICES.add("com.jetbrains.WindowMove");
             IGNORED_SERVICES.add("com.jetbrains.TextInput");
             IGNORED_SERVICES.add("com.jetbrains.SystemShortcuts");
+            IGNORED_EXTENSIONS.add("BUILTIN_DISPLAY_CHECKER");
         }
         if (!JBR.getApiVersion().equals("SNAPSHOT") &&
             !JBR.getApiVersion().matches("\\d+\\.\\d+\\.\\d+")) throw new Error("Invalid API version: " + JBR.getApiVersion());
@@ -102,6 +106,7 @@ public class JBRApiTest {
     private static void testExtensions() {
         if (System.getProperty("jetbrains.runtime.api.extensions.enabled", "true").equalsIgnoreCase("false")) return;
         for (Extensions ext : Extensions.values()) {
+            if (IGNORED_EXTENSIONS.contains(ext.name())) continue;
             if (!JBR.isExtensionSupported(ext)) {
                 throw new Error("Extension " + ext.name() + " is not supported");
             }
