@@ -48,10 +48,12 @@ public class JBRApiTest {
             IGNORED_EXTENSIONS.add("BUILTIN_DISPLAY_CHECKER");
         } else if (os.contains("mac")) {
             IGNORED_SERVICES.add("com.jetbrains.WindowMove");
+            IGNORED_SERVICES.add("com.jetbrains.HiDPIInfo");
         } else {
             IGNORED_SERVICES.add("com.jetbrains.WindowMove");
             IGNORED_SERVICES.add("com.jetbrains.TextInput");
             IGNORED_SERVICES.add("com.jetbrains.SystemShortcuts");
+            IGNORED_SERVICES.add("com.jetbrains.HiDPIInfo");
             IGNORED_EXTENSIONS.add("BUILTIN_DISPLAY_CHECKER");
         }
         if (!JBR.getApiVersion().equals("SNAPSHOT") &&
