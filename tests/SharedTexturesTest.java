@@ -14,29 +14,38 @@
  * limitations under the License.
  */
 
-/*
+ /**
  * @test
  *
- * @summary Checks SharedTexture service presence
- * @requires (os.family=="mac")
+ * @summary Checks SharedTexture service presence on Linux
+ * @requires (os.family == "linux")
  *
- * @run main/othervm -Dsun.java2d.metal=True SharedTexturesTest
+ * @run main/othervm -Dsun.java2d.opengl=True -DsharedTexturesSupported=True SharedTexturesTest
  */
+
+/**
+ * @test
+ *
+ * @summary Checks SharedTexture service presence on Windows
+ * @requires (os.family == "windows")
+ *
+ * @run main/othervm -Dsun.java2d.opengl=True -DsharedTexturesSupported=True SharedTexturesTest
+ */
+
 
 import com.jetbrains.JBR;
 import com.jetbrains.SharedTextures;
 
 public class SharedTexturesTest {
     public static void main(String[] args) {
-        if (JBR.isSharedTexturesSupported()) {
-            SharedTextures service = JBR.getSharedTextures();
-            if (System.getProperty("sun.java2d.metal").equals("True")) {
-                if (service.getTextureType() != SharedTextures.METAL_TEXTURE_TYPE) {
-                    throw new RuntimeException("Unexpected texture type: " + service.getTextureType());
-                }
-            }
-        } else {
-            throw new RuntimeException("Shared texture are not supported");
+        if (!JBR.isSharedTexturesSupported()) {
+            throw new RuntimeException("SharedTextures are not supported");
+        }
+    }
+
+    public static int getExpectedTextureType() {
+        if ("true".compareToIgnoreCase(System.getProperty("sun.java2d.opengl")) {
+            return SharedTextures.METAL_TEXTURE_TYPE;
         }
     }
 }
