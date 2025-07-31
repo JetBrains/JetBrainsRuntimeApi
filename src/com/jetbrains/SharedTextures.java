@@ -16,14 +16,19 @@
 
 package com.jetbrains;
 
+import jdk.jfr.Experimental;
+
 import java.awt.*;
 import java.awt.image.VolatileImage;
 
 /**
  * The service provides functionality for working with shared textures in JetBrainsRuntime.
+ *
+ * This service is experemental could be replaced with another service or deprecated.
  */
 @Service
 @Provided
+@Experimental()
 public interface SharedTextures {
     /**
      * Metal textures are supported.
@@ -31,22 +36,23 @@ public interface SharedTextures {
     public final static int METAL_TEXTURE_TYPE = 1;
 
     /**
-     * OpenGL.
+     * OpenGL textures are supported
      */
     public final static int OPENGL_TEXTURE_TYPE = 2;
 
 
     /**
-     * Returns the texture type supported by the default graphics device.
-     * @param gc the target GraphicsConfiguration
+     * Returns the texture type supported by the graphics configuration.
+     * @param gc the GraphicsConfiguration
      * @return the type of shared texture supported.
      */
     @Extension(Extensions.SHARED_TEXTURES_OPENGL)
     int getTextureType(GraphicsConfiguration gc);
 
     /**
-     * Returns the texture type supported by the current graphics configuration.
-     * @deprecated This method returns the texture type for the default graphics device.
+     * Returns the texture type supported by the default graphics configuration
+     * of the default graphics device.
+     * @deprecated The graphics environment may contain configurations of different types.
      *             Use {@link #getTextureType(GraphicsConfiguration)} instead.
      *
      * @return the type of shared texture supported.
@@ -68,10 +74,11 @@ public interface SharedTextures {
      *     <li>Client code is responsible for ensuring proper synchronization. All operations involving
      *         the texture must have been completed before the resulting image is used within the JBR rendering
      *         pipeline.</li>
-     *     <li>Texture liftime:
+     *     <li>Texture lifespan:
      *          <ul>
-     *              <li>Metal: This texture is retained for the wrapping image lifetime and will be released
+     *              <li>Metal: This texture is retained for the wrapping image lifespan and will be released
      *                  after the image has been disposed.</li>
+ *                  <li>OpenGL: The wrapping image doesn't take owernship over the texute.</li>
      *          </ul>
      *     </li>
      * </ul>
@@ -80,8 +87,9 @@ public interface SharedTextures {
      * @param texture the texture to be wrapped.
      *                <p>Platform-specific:</p>
      *                <ul>
-     *                    <li>macOS (with the Metal rendering pipeline): a pointer to an {@code MTLTexture} object</li>
-     *                </ul>
+     *                    <li>Metal: an {@code MTLTexture} object pointer</li>
+     *                    <li>OpenGL: a texture id({@code GLuint})</li>
+     *               </ul>
      * @return a wrapping image compatible with the specified {@code GraphicsConfiguration}.
      * @throws UnsupportedOperationException if the current pipeline is not supported.
      * @throws IllegalArgumentException      if the texture cannot be wrapped. The details are logged in {@code J2D_TRACE_ERROR}.
@@ -89,18 +97,32 @@ public interface SharedTextures {
     Image wrapTexture(GraphicsConfiguration gc, long texture);
 
     /**
-     * Blablabla
-     * @param gc Blablabla
-     * @return Blablabla
+     * Returns the pointer to the shared OpenGL context instance.
+     *
+     * @param gc the graphics configuations
+     * @return the OpenGL shared context instance.
+     *         <p>Return type:</p>
+     *         <ul>
+     *           <li>Windows: {@code HGLRC}</li>
+     *           <li>macOS: {@code CGLContextObj}</li>
+     *           <li>Linux: {@code GLXContext}</li>
+     *         </ul>
      */
     @Extension(Extensions.SHARED_TEXTURES_OPENGL)
-    long getSharedGLContext(GraphicsConfiguration gc);
+    long getSharedGLContext(GraphicsConfiguration gc) throws UnsupportedOperationException;
 
     /**
-     * Blablabla
-     * @param gc Blablabla
-     * @return Blablabla
+     * Returns the pixel format in the shared context.
+     *
+     * @param gc the graphics configuations
+     * @return the pixel format.
+     *         <p>Return type:</p>
+     *         <ul>
+     *           <li>Windows: {@code  int}</li>
+     *           <li>macOS: {@code CGLPixelFormatObj}</li>
+     *           <li>Linux: 0 (not used)</li>
+     *         </ul>
      */
     @Extension(Extensions.SHARED_TEXTURES_OPENGL)
-    int getGLPixelFormat(GraphicsConfiguration gc);
+    long getGLPixelFormat(GraphicsConfiguration gc) throws UnsupportedOperationException;
 }

@@ -44,7 +44,7 @@ public class SharedTexturesTest {
     }
 
     public static int getExpectedTextureType() {
-        if ("true".compareToIgnoreCase(System.getProperty("sun.java2d.opengl")) {
+        if ("true".equalsIgnoreCase(System.getProperty("sun.java2d.opengl"))) {
             return SharedTextures.METAL_TEXTURE_TYPE;
         }
     }
