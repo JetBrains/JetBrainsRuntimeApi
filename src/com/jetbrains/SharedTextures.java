@@ -16,19 +16,16 @@
 
 package com.jetbrains;
 
-import jdk.jfr.Experimental;
-
 import java.awt.*;
 import java.awt.image.VolatileImage;
 
 /**
  * The service provides functionality for working with shared textures in JetBrainsRuntime.
  *
- * This service is experemental could be replaced with another service or deprecated.
+ * This service is experemental and could be replaced with another service or deprecated.
  */
 @Service
 @Provided
-@Experimental()
 public interface SharedTextures {
     /**
      * Metal textures are supported.
@@ -109,7 +106,7 @@ public interface SharedTextures {
      *         </ul>
      */
     @Extension(Extensions.SHARED_TEXTURES_OPENGL)
-    long getSharedGLContext(GraphicsConfiguration gc) throws UnsupportedOperationException;
+    long getSharedOpenGLContext(GraphicsConfiguration gc) throws UnsupportedOperationException;
 
     /**
      * Returns the pixel format in the shared context.
@@ -124,5 +121,5 @@ public interface SharedTextures {
      *         </ul>
      */
     @Extension(Extensions.SHARED_TEXTURES_OPENGL)
-    long getGLPixelFormat(GraphicsConfiguration gc) throws UnsupportedOperationException;
+    long getSharedOpenGLPixelFormat(GraphicsConfiguration gc) throws UnsupportedOperationException;
 }
