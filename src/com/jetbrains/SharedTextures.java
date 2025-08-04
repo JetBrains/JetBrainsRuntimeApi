@@ -103,7 +103,7 @@ public interface SharedTextures {
      *     <li>2 elements(Windows):
      *     <ul>
      *         <li>0 - handle to an OpenGL Rendering Context({@code HGLRC})</li>
-     *         <li>1 - pixel format index(see {@code SetPixelFormat})</li>
+     *         <li>1 - pixel format index(see Win32 {@code SetPixelFormat})</li>
      *     </ul>
      *     </li>
      *     <li>3 elements(Linux):
