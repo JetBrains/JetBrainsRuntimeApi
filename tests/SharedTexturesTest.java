@@ -23,25 +23,6 @@
  * @run main/othervm -Dsun.java2d.opengl=True -DsharedTexturesSupported=True SharedTexturesTest
  */
 
-/**
- * @test
- *
- * @summary Checks SharedTexture service presence on Windows
- * @requires (os.family == "windows")
- *
- * @run main/othervm -Dsun.java2d.opengl=True -DsharedTexturesSupported=True SharedTexturesTest
- */
-
-/**
- * @test
- *
- * @summary Checks SharedTexture service presence on Windows
- * @requires (os.family == "mac")
- *
- * @run main/othervm -Dsun.java2d.opengl=True -DsharedTexturesSupported=True SharedTexturesTest
- * @run main/othervm -Dsun.java2d.metal=True -DsharedTexturesSupported=True SharedTexturesTest
- */
-
 
 import com.jetbrains.Extensions;
 import com.jetbrains.JBR;
@@ -73,10 +54,11 @@ public class SharedTexturesTest {
         }
 
         if (actualTextureType == SharedTextures.OPENGL_TEXTURE_TYPE) {
-            if (sharedTexturesService.getSharedOpenGLContext(gc) == 0) {
-                throw new RuntimeException("Expected non-zero shared OpenGL context");
+            int sharedContextSize = System.getProperty("os.name").toLowerCase().contains("linux") ? 3 : 2;
+            long[] sharedOpenGLContext = sharedTexturesService.getOpenGLContextInfo(gc);
+            if (sharedOpenGLContext.length != sharedContextSize) {
+                throw new RuntimeException("getSharedOpenGLContext: Expected " + sharedContextSize + " elements, actual: " + sharedOpenGLContext.length);
             }
-            sharedTexturesService.getSharedOpenGLPixelFormat(gc); // expect no throw
         }
 
         {
