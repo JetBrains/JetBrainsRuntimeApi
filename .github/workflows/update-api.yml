@@ -90,7 +90,7 @@ jobs:
             out/jbr-api-${{steps.build.outputs.API_VERSION}}.pom
             out/jbr-api-${{steps.build.outputs.API_VERSION}}.pom.sha256
       - name: Push update
-        if: ${{steps.build.outputs.PUSH}}
+        if: steps.build.outputs.PUSH && github.ref_name == 'main'
         env:
           API_VERSION: ${{steps.build.outputs.API_VERSION}}
           API_DIFF: ${{steps.build.outputs.API_DIFF}}
@@ -106,7 +106,7 @@ jobs:
     permissions:
       contents: write
     needs: build
-    if: ${{needs.build.outputs.RELEASE}}
+    if: needs.build.outputs.RELEASE && github.ref_name == 'main'
     steps:
       - name: Download artifact jars
         uses: actions/download-artifact@v4.1.7
@@ -175,7 +175,7 @@ jobs:
       pages: write
       id-token: write
     needs: build
-    if: ${{needs.build.outputs.JAVADOC}}
+    if: needs.build.outputs.JAVADOC && github.ref_name == 'main'
     steps:
       - name: Download artifact jars
         uses: actions/download-artifact@v4.1.7
