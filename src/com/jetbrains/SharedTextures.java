@@ -20,6 +20,8 @@ import java.awt.*;
 
 /**
  * The service provides functionality for working with shared textures in JetBrainsRuntime.
+ * <p>
+ * This service is experemental and could be replaced with another service or deprecated.
  */
 @Service
 @Provided
@@ -30,10 +32,29 @@ public interface SharedTextures {
     public final static int METAL_TEXTURE_TYPE = 1;
 
     /**
-     * Returns the texture type supported by the current rendering pipeling.
+     * OpenGL textures are supported
+     */
+    public final static int OPENGL_TEXTURE_TYPE = 2;
+
+
+    /**
+     * Returns the texture type supported by the graphics configuration.
      *
+     * @param gc the GraphicsConfiguration
      * @return the type of shared texture supported.
      */
+    @Extension(Extensions.SHARED_TEXTURES_OPENGL)
+    int getTextureType(GraphicsConfiguration gc);
+
+    /**
+     * Returns the texture type supported by the default graphics configuration
+     * of the default graphics device.
+     *
+     * @return the type of shared texture supported.
+     * @deprecated The graphics environment may contain configurations of different types.
+     * Use {@link #getTextureType(GraphicsConfiguration)} instead.
+     */
+    @Deprecated
     int getTextureType();
 
     /**
@@ -50,10 +71,11 @@ public interface SharedTextures {
      *     <li>Client code is responsible for ensuring proper synchronization. All operations involving
      *         the texture must have been completed before the resulting image is used within the JBR rendering
      *         pipeline.</li>
-     *     <li>Texture liftime:
+     *     <li>Texture lifespan:
      *          <ul>
-     *              <li>Metal: This texture is retained for the wrapping image lifetime and will be released
+     *              <li>Metal: This texture is retained for the wrapping image lifespan and will be released
      *                  after the image has been disposed.</li>
+     *                  <li>OpenGL: The wrapping image doesn't take owernship over the texute.</li>
      *          </ul>
      *     </li>
      * </ul>
@@ -62,11 +84,43 @@ public interface SharedTextures {
      * @param texture the texture to be wrapped.
      *                <p>Platform-specific:</p>
      *                <ul>
-     *                    <li>macOS (with the Metal rendering pipeline): a pointer to an {@code MTLTexture} object</li>
+     *                    <li>Metal: an {@code MTLTexture} object pointer</li>
+     *                    <li>OpenGL: a texture id({@code GLuint})</li>
      *                </ul>
      * @return a wrapping image compatible with the specified {@code GraphicsConfiguration}.
      * @throws UnsupportedOperationException if the current pipeline is not supported.
      * @throws IllegalArgumentException      if the texture cannot be wrapped. The details are logged in {@code J2D_TRACE_ERROR}.
      */
     Image wrapTexture(GraphicsConfiguration gc, long texture);
+
+    /**
+     * Provides information needed for using shared OpenGL context.
+     *
+     * @param gc the target {@link GraphicsConfiguration}.
+     *
+     * @return an array of
+     * <ul>
+     *     <li>2 elements(Windows):
+     *     <ul>
+     *         <li>0 - handle to an OpenGL Rendering Context ({@code HGLRC})</li>
+     *         <li>1 - pixel format index (see Win32 {@code SetPixelFormat})</li>
+     *     </ul>
+     *     </li>
+     *     <li>3 elements(Linux):
+     *     <ul>
+     *         <li>0 - shared context handle ({@code GLXContext})</li>
+     *         <li>1 - Xlib connection pointer ({@code Display*})</li>
+     *         <li>2 - GLX frame buffer configuration ({@code GLXFBConfig})</li>
+     *     </ul>
+     *     </li>
+     *     <li>2 elements(macOS):
+     *     <ul>
+     *         <li>0 - shared context ({@code CGLContextObj})</li>
+     *         <li>1 - pixel format ({@code CGLPixelFormatObj})</li>
+     *     </ul>
+     *     </li>
+     * </ul>
+     */
+    @Extension(Extensions.SHARED_TEXTURES_OPENGL)
+    long[] getOpenGLContextInfo(GraphicsConfiguration gc) throws UnsupportedOperationException;
 }
