@@ -30,5 +30,9 @@ public enum Extensions {
     /**
      * Opts-in {@link com.jetbrains.SystemUtils#shrinkingGC}
      */
-    SHRINKING_GC
+    SHRINKING_GC,
+    /**
+     * Extends SharedTextures service with OpenGL support
+     */
+    SHARED_TEXTURES_OPENGL,
 }
