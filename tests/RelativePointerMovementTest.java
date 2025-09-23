@@ -52,7 +52,6 @@ public class RelativePointerMovementTest {
         try {
             Robot robot = new Robot();
             robot.waitForIdle();;
-            robot.delay(1000);
             Point p = JBR.getRelativePointerMovement().getAccumulatedMouseDeltaAndReset();
             System.out.println("Mouse delta: " + p);
             if (p == null) {

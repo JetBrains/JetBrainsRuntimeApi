@@ -79,9 +79,13 @@ public class RelativePointerMovementManualTest {
         showPopupButton.addActionListener(e -> showDraggablePopup(frame));
         content.add(showPopupButton);
         JButton passButton = new JButton("Pass");
-        passButton.addActionListener(e -> {swingError.complete(null);});
+        passButton.addActionListener(e -> {
+            swingError.complete(null);
+        });
         JButton failButton = new JButton("Fail");
-        failButton.addActionListener(e -> {swingError.completeExceptionally(new RuntimeException("The tester has pressed FAILED"));});
+        failButton.addActionListener(e -> {
+            swingError.completeExceptionally(new RuntimeException("The tester has pressed FAILED"));
+        });
         content.add(failButton);
         content.add(passButton);
 
