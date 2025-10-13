@@ -1,3 +1,7 @@
+#!/usr/bin/env bash
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2000-2025  JetBrains s.r.o.
+
 # $1 - Mode (process/dev/full/<version>)
 # $2 - Boot JDK path (Java 18+)
 # $3 - Output path - *not supported on Windows
@@ -50,7 +54,7 @@ else
 fi
 
 # Check licences.
-LICENCE_PATTERN=`cat <<-END
+LONG_LICENCE_PATTERN=`cat <<-END
 /\*
  \* Copyright ?(2000-)20[0-9][0-9] JetBrains s.r.o.
  \*
@@ -66,17 +70,21 @@ LICENCE_PATTERN=`cat <<-END
  \* See the License for the specific language governing permissions and
  \* limitations under the License.
  \*/
-*
 END
 `
-for i in `find . -name "*.java" -type f`; do
-    if [[ `cat $i` != $LICENCE_PATTERN ]] ; then
-      echo -e "\u2757 Unexpected licence header in ${i:2}, please use Apache 2.0." >> "$OUT/message.txt"
-      echo -e "Error: Unexpected licence header in ${i:2}, please use Apache 2.0."
-      LICENCE_CHECK_FAILED=true
+
+SHORT_LICENCE_PATTERN="SPDX-License-Identifier: Apache-2.0"
+
+for i in $(find . -name "*.java" -type f); do
+    if ! grep -q "$LONG_LICENCE_PATTERN" "$i" && ! grep -q "$SHORT_LICENCE_PATTERN" "$i"; then
+        echo -e "\u2757 Unexpected licence header in ${i:2}, please use Apache 2.0." >> "$OUT/message.txt"
+        echo -e "Error: Unexpected licence header in ${i:2}, please use Apache 2.0."
+        LICENCE_CHECK_FAILED=true
     fi
 done
-if [ "$LICENCE_CHECK_FAILED" = true ] ; then exit 1; fi
+
+if [ "$LICENCE_CHECK_FAILED" = true ]; then exit 1; fi
+
 
 # Check javac.
 $JAVAC --help &> /dev/null || JAVAC="${JAVAC}.exe"
