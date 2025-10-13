@@ -19,6 +19,7 @@
  * @test
  * @summary Verifies that Vulkan service works on Linux.
  * @requires os.family == "linux"
+ * @key headful
  * @run main/othervm -Dawt.toolkit.name=WLToolkit -Dsun.java2d.vulkan=True VulkanTest
  */
 
