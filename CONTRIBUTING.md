@@ -405,7 +405,7 @@ Tests for JBR API functionality are kept in `jbr-api/tests`.
 It's a single set of JTreg tests, which is run against
 each JBR supporting the corresponding JBR API version.
 Each service usually has its own test like `MyServiceTest`.
-JBR API tests are [block box tests](https://en.wikipedia.org/wiki/Black-box_testing)
+JBR API tests are [black box tests](https://en.wikipedia.org/wiki/Black-box_testing)
 verifying the observed behavior via public API.
 These usually include examples of the service's intended usage.
 If you need to test the new functionality in the
