@@ -170,7 +170,7 @@ public final class JBR {
     @SuppressWarnings({"rawtypes", "deprecation"})
     private static final class Metadata {
         // Needed only for compatibility.
-        private static final String[] KNOWN_SERVICES = {"com.jetbrains.JBR$ServiceApi", /*KNOWN_SERVICES*/};
+        private static final String[] KNOWN_SERVICES = {/*KNOWN_SERVICES*/};
         private static final String[] KNOWN_PROXIES = {/*KNOWN_PROXIES*/};
 
         private static final Function<java.lang.reflect.Method, Extensions> EXTENSION_EXTRACTOR = m -> {

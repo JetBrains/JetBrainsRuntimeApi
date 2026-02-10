@@ -38,8 +38,10 @@ public class JBRApiTest {
     private static final Set<String> IGNORED_EXTENSIONS = new HashSet<>();
 
     public static void main(String[] args) throws Exception {
+        IGNORED_SERVICES.add("com.jetbrains.RelativePointerMovement"); // only supported for the WLToolkit
         IGNORED_SERVICES.add("com.jetbrains.RoundedCornersManager");
         IGNORED_SERVICES.add("com.jetbrains.SharedTextures"); // only supported for the Metal pipeline
+        IGNORED_SERVICES.add("com.jetbrains.Vulkan"); // only supported for the WLToolkit
         String os = System.getProperty("os.name").toLowerCase();
         if (os.contains("linux")) {
             IGNORED_SERVICES.add("com.jetbrains.WindowDecorations");
@@ -69,11 +71,7 @@ public class JBRApiTest {
         Class<?> metadata = Class.forName(JBR.class.getName() + "$Metadata");
         Field field = metadata.getDeclaredField("KNOWN_SERVICES");
         field.setAccessible(true);
-        List<String> knownServices = List.of((String[]) field.get(null));
-        if (!knownServices.contains("com.jetbrains.JBR$ServiceApi")) {
-            throw new Error("com.jetbrains.JBR$ServiceApi was not found in known services of com.jetbrains.JBR$Metadata");
-        }
-        return knownServices;
+        return List.of((String[]) field.get(null));
     }
 
     private static void testAllKnownServices(List<String> knownServices) throws ClassNotFoundException, NoSuchFieldException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
