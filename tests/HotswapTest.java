@@ -19,7 +19,7 @@
  * @modules java.instrument jdk.compiler
  * @build HotswapTestAgent HotswapTestMakeAgentJar HotswapTest
  * @run driver HotswapTestMakeAgentJar
- * @run main/othervm -javaagent:HotswapTestAgent.jar HotswapTest
+ * @run main/othervm -XX:+AllowEnhancedClassRedefinition -javaagent:HotswapTestAgent.jar HotswapTest
  */
 
 import com.jetbrains.JBR;
