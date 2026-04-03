@@ -18,7 +18,7 @@
 /*
  * @test
  * @summary Verifies Screenshoter.getWindowBackbufferArea()
- * @run main/othervm -Dswing.bufferPerWindow=true BackbufferScreenshoter
+ * @run main/othervm -Dswing.bufferPerWindow=true -Dsun.java2d.uiScale.enabled=false BackbufferScreenshoter
  * @run main/othervm -Dswing.bufferPerWindow=false BackbufferScreenshoter
  */
 
@@ -206,10 +206,9 @@ public class BackbufferScreenshoter {
             frame.setSize(WIDTH, HEIGHT);
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.getContentPane().setBackground(Color.GREEN);
-            frame.setVisible(true);
         });
 
-        robot.waitForIdle();;
+        robot.waitForIdle();
         robot.delay(1000);
 
         try {
