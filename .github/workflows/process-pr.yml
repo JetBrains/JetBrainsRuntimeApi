@@ -34,3 +34,10 @@ jobs:
         with:
           name: process
           path: artifact/
+      - name: Build
+        run: bash tools/build.sh dev
+      - name: Upload JAR
+        uses: actions/upload-artifact@v4.3.1
+        with:
+          name: jbr-api
+          path: out/jbr-api-SNAPSHOT.jar
