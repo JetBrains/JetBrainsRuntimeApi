@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2024 JetBrains s.r.o.
+ * Copyright 2000-2026 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,6 +52,12 @@ public interface RoundedCornersManager {
      *   <li>"none" - never round window corners</li>
      *   <li>"full" - round the corners if appropriate</li>
      *   <li>"small" - round the corners if appropriate, with a small radius</li>
+     *   <li>{@link Float} object with radius</li>
+     *   <li>{@link Object} array with:<ul>
+     *     <li>{@link Float} for radius</li>
+     *     <li>{@link Integer} for border width</li>
+     *     <li>{@link java.awt.Color} for border color</li>
+     *   </ul></li>
      * </ul>
      *
      * @param window window to setup rounded corners on
