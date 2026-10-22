@@ -20,6 +20,7 @@
   @run main/othervm -Djava2d.font.subpixelResolution=1x1 FontExtensionsTest
 */
 
+import com.jetbrains.Extensions;
 import com.jetbrains.FontExtensions;
 import com.jetbrains.JBR;
 
@@ -171,6 +172,24 @@ public class FontExtensionsTest {
     @JBRTest
     private static Boolean testFeaturesEmpty() {
         return textDrawingEquals(BASE_FONT, fontWithFeatures(), TEST_STRING);
+    }
+
+    @JBRTest
+    private static Boolean testCanDisplayWithoutFallback() {
+        FontExtensions fontExtensions = JBR.getFontExtensions(Extensions.CAN_DISPLAY_WITHOUT_FALLBACK);
+        if (fontExtensions == null) return false;
+        // JetBrains Mono has Latin, but no CJK glyphs, they can only come from fallback fonts.
+        if (!fontExtensions.canDisplayWithoutFallback(BASE_FONT, 'A')) return false;
+        if (fontExtensions.canDisplayWithoutFallback(BASE_FONT, 0x4F60)) return false;
+        if (fontExtensions.canDisplayWithoutFallback(BASE_FONT, 0x3002)) return false;
+        // Result must not depend on whether the glyph was already used for rendering.
+        getImageWithString(BASE_FONT, "你");
+        if (fontExtensions.canDisplayWithoutFallback(BASE_FONT, 0x4F60)) return false;
+        try {
+            fontExtensions.canDisplayWithoutFallback(BASE_FONT, -1);
+            return false;
+        } catch (IllegalArgumentException ignore) {}
+        return true;
     }
 
     public static void main(final String[] args) {

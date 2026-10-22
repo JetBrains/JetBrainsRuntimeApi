@@ -30,5 +30,10 @@ public enum Extensions {
     /**
      * Opts-in {@link com.jetbrains.SystemUtils#shrinkingGC}
      */
-    SHRINKING_GC
+    SHRINKING_GC,
+
+    /**
+     * Opts-in {@link com.jetbrains.FontExtensions#canDisplayWithoutFallback}
+     */
+    CAN_DISPLAY_WITHOUT_FALLBACK
 }

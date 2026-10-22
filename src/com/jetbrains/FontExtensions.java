@@ -315,4 +315,21 @@ public interface FontExtensions {
      * @return subpixel resolution (N, M)
      */
     Dimension getSubpixelResolution();
+
+    /**
+     * Checks if the given font itself has a glyph for the specified character.
+     * Unlike {@link Font#canDisplay(int)}, this method doesn't take into account
+     * fallback fonts which may be substituted by the platform for characters
+     * missing in the requested font. For example, on macOS {@link Font#canDisplay(int)}
+     * returns {@code true} for any character which can be displayed by
+     * any of the system fallback fonts.
+     * For logical fonts, all their component fonts are considered.
+     * @param font      the font
+     * @param codePoint the character (Unicode code point) for which a glyph is needed
+     * @return {@code true} if the font itself has a glyph for the character; {@code false} otherwise
+     * @throws IllegalArgumentException if the code point is not a valid Unicode code point
+     * @see Font#canDisplay(int)
+     */
+    @Extension(Extensions.CAN_DISPLAY_WITHOUT_FALLBACK)
+    boolean canDisplayWithoutFallback(Font font, int codePoint);
 }
