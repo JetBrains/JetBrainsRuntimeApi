@@ -88,3 +88,4 @@ API and implementation versions can be retrieved from the `JBR` class:
 * [JBR API documentation](https://jetbrains.github.io/JetBrainsRuntimeApi)
 * [JBR API development guide](CONTRIBUTING.md)
 * [JetBrainsRuntime (JBR)](https://github.com/JetBrains/JetBrainsRuntime)
+* [org.jetbrains.runtime:jbr-api on Maven Central](https://repo1.maven.org/maven2/org/jetbrains/runtime/jbr-api/)
