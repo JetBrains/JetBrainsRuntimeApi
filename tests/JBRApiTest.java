@@ -38,6 +38,7 @@ public class JBRApiTest {
     private static final Set<String> IGNORED_EXTENSIONS = new HashSet<>();
 
     public static void main(String[] args) throws Exception {
+        IGNORED_SERVICES.add("com.jetbrains.DisplayRefresh"); // only supported on macOS and Windows, not in a headless session
         IGNORED_SERVICES.add("com.jetbrains.RelativePointerMovement"); // only supported for the WLToolkit
         IGNORED_SERVICES.add("com.jetbrains.RoundedCornersManager");
         IGNORED_SERVICES.add("com.jetbrains.SharedTextures"); // only supported for the Metal pipeline
